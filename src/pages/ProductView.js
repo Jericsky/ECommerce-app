@@ -47,7 +47,7 @@ export default function ProductView() {
             },
             body: JSON.stringify({
                 productId,
-                quantity, // Send quantity directly, not inside cart array
+                quantity, 
                 totalPrice: price * quantity
             })
         })
@@ -61,7 +61,7 @@ export default function ProductView() {
                 notyf.error(data.error);
             } else {
                 notyf.success('Added to Cart.');
-                navigate('/productsCatalog'); 
+                navigate('/products'); 
             }
         })
         .catch(error => {
@@ -117,7 +117,7 @@ export default function ProductView() {
                                         value={quantity}
                                         onChange={handleQuantityChange}
                                         className="mx-2"
-                                        min="1" // Ensure input can't be less than 1
+                                        min="1" 
                                         style={{ width: '60px' }}
                                     />
 

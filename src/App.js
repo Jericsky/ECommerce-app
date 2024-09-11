@@ -1,14 +1,15 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { UserProvider } from './context/UserContext';
 import Login from './pages/Login';
 import CatalogPage from './pages/CatalogPage';
 import Home from './pages/Home';
-import { UserProvider } from './context/UserContext';
 import ProductView from './pages/ProductView';
 import Register from './pages/Register';
-// import AppNavbar from './components/AppNavbar';
-// import Logout from './pages/Logout';
+import AppNavbar from './components/AppNavbar';
+import Logout from './pages/Logout';
+import Error from './components/Error';
 
 function App() {
 
@@ -33,13 +34,13 @@ function App() {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
-      console.log(typeof data.access !== undefined);
+      console.log(data)
 
-      if (typeof data.access !== 'undefined') {
+      if (data.user) {
+        
         setUser({
-          id: data._id,
-          isAdmin: data.isAdmin
+          id: data.user._id,
+          isAdmin: data.user.isAdmin
         });
       } else {
         setUser({
@@ -58,15 +59,15 @@ function App() {
   return (
     <UserProvider value={{ user, setUser, unsetUser }}>
       <Router>
-        {/* <AppNavbar/> */}
+        <AppNavbar/>
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/login' element={<Login />} />
-          <Route path='/productsCatalog' element={<CatalogPage/>}/>
+          <Route path='/products' element={<CatalogPage/>}/>
           <Route path='/product/:productId' element={<ProductView/>}/>
-          {/* <Route path="/logout" element={<Logout />} /> */}
-          {/* Add more routes here as needed */}
+          <Route path="/logout" element={<Logout />}/>
+          <Route path="*" element={<Error />} />
         </Routes>
       </Router>
     </UserProvider>

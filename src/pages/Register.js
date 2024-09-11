@@ -1,10 +1,10 @@
 import React from 'react';
 import { Form, FloatingLabel, Button, Container, Row, Col } from 'react-bootstrap';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import UserContext from '../context/UserContext';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom'; 
 
 export default function Register() {
     const notyf = new Notyf();
@@ -59,8 +59,7 @@ export default function Register() {
         });
     }
 
-    // Update button style based on form validity
-    React.useEffect(() => {
+    useEffect(() => {
         if (isFormValid()) {
             setButtonVariant("primary");
             setButtonText("Register");

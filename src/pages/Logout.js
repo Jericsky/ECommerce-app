@@ -1,21 +1,26 @@
-// import { useEffect, useContext } from 'react'
-// import { Navigate } from 'react-router-dom';
-// import UserContext from '../context/UserContext';
+import { useEffect, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import UserContext from '../context/UserContext';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
-// export default function Logout() {
+export default function Logout() {
 
-// 	const { setUser, unsetUser } = useContext(UserContext);
+  const notyf = new Notyf();
 
-// 	unsetUser();
+  const { setUser, unsetUser } = useContext(UserContext);
 
-// 	useEffect(() => {
-// 		setUser({
-// 			id: null,
-// 			isAdmin: null
-// 		});
-// 	})
-	
-// 	return(
-// 		<Navigate to='/login' />
-// 	)
-// }
+  useEffect(() => {
+    
+    unsetUser(); 
+    setUser({
+      id: null,
+      isAdmin: null
+    });
+
+  }, [unsetUser, setUser]); 
+
+  return (
+    <Navigate to='/login' />
+  );
+}
