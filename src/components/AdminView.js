@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Container, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import EditProducts from './EditProducts';
 import ArchiveProduct from './ArchiveProduct';
 import AddProducts from './AddProducts';
+import { motion } from 'framer-motion';
 
 export default function AdminView({ productsData, fetchData }) {
   const [products, setProducts] = useState([]);
   const [filterOption, setFilterOption] = useState('none');
   const [availabilityFilter, setAvailabilityFilter] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
+  const navigate = useNavigate(); // Using useNavigate to redirect to the orders page
 
   useEffect(() => {
     let filteredProducts = [...productsData];
@@ -25,7 +28,13 @@ export default function AdminView({ productsData, fetchData }) {
     }
 
     const productsArray = filteredProducts.map(product => (
-      <tr key={product._id}>
+      <motion.tr 
+        key={product._id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3 }}
+      >
         <td>{product.name}</td>
         <td>{product.description}</td>
         <td>₱{product.price.toFixed(2)}</td>
@@ -36,7 +45,7 @@ export default function AdminView({ productsData, fetchData }) {
           <EditProducts product={product} fetchData={fetchData} />
           <ArchiveProduct product={product} isActive={product.isActive} fetchData={fetchData} />
         </td>
-      </tr>
+      </motion.tr>
     ));
 
     setProducts(productsArray);
@@ -45,13 +54,16 @@ export default function AdminView({ productsData, fetchData }) {
   const openAddModal = () => setShowAddModal(true);
   const closeAddModal = () => setShowAddModal(false);
 
+  // Redirect to orders page
+  const goToOrdersPage = () => navigate('/all-orders');
+
   return (
     <Container fluid className="mt-5 px-md-5">
       <h1 className="text-primary text-center">Admin Dashboard</h1>
 
       <div className="text-center mb-5">
         <Button variant="primary" onClick={openAddModal}>Add Products</Button>
-        <Button variant="secondary">Order</Button>
+        <Button variant="secondary" onClick={goToOrdersPage}>View Orders</Button>
       </div>
 
       {/* Filter Options */}
@@ -59,7 +71,7 @@ export default function AdminView({ productsData, fetchData }) {
         <strong className="me-2">Filter:</strong>
         <Form.Check
           inline
-          label="None"
+          label="Date Added"
           type="radio"
           name="filterOptions"
           value="none"
@@ -115,7 +127,6 @@ export default function AdminView({ productsData, fetchData }) {
         </Table>
       </div>
 
-      {/* AddProducts Modal */}
       <AddProducts show={showAddModal} handleClose={closeAddModal} fetchData={fetchData} />
     </Container>
   );

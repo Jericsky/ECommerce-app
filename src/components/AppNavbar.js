@@ -27,9 +27,20 @@ export default function AppNavbar() {
                   </Nav.Link>
                 )}
                 {!user.isAdmin && (
-                  <Nav.Link as={NavLink} to="/products" className="text-secondary">
-                    Products
-                  </Nav.Link>
+                  <>
+                    <Nav.Link as={NavLink} to="/products" className="text-secondary">
+                      Products
+                    </Nav.Link>
+                    <Nav.Link as={NavLink} to="/cart" className="text-secondary">
+                      Cart
+                    </Nav.Link>
+                    <Nav.Link as={NavLink} to='/order' className='text-secondary'>
+                      Orders
+                    </Nav.Link>
+                    <Nav.Link as={NavLink} to="/profile" className="text-secondary">
+                      Profile
+                    </Nav.Link>
+                  </>
                 )}
                 <Nav.Link as={NavLink} to="/logout" className="text-secondary">
                   Logout

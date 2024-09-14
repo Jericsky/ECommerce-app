@@ -16,8 +16,9 @@ export default function ProductCard({ productProp }) {
                 </Card.Text>
                 <div className="mt-auto text-center">
                     <Card.Text className="text-success" style={{ fontSize: '0.9rem' }}>
-                        PhP {price}
+                        ₱ {price}
                     </Card.Text>
+                    
                     <Link className="btn btn-primary mt-2" to={`/product/${_id}`}>Details</Link>
                 </div>
             </Card.Body>

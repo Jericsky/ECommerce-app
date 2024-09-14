@@ -18,7 +18,7 @@ export default function ProductView() {
     const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
-        fetch(`http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/products/${productId}`)
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${productId}`)
             .then(res => res.json())
             .then(data => {
 
@@ -39,7 +39,7 @@ export default function ProductView() {
             return;
         }
     
-        fetch('http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/cart/add-to-cart', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/add-to-cart`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -70,11 +70,6 @@ export default function ProductView() {
         });
     }
     
-    
-
-
-
-
     const handleQuantityChange = (event) => {
         const value = Number(event.target.value);
         if (value >= 1) {
@@ -84,7 +79,6 @@ export default function ProductView() {
         }
     };
     
-
     const incrementQuantity = () => {
         setQuantity(prevQuantity => prevQuantity + 1);
     };
@@ -106,7 +100,7 @@ export default function ProductView() {
                                 {description}
                             </Card.Text>
                             <Card.Text className="text-success" style={{ fontSize: '0.9rem' }}>
-                                PhP {price}
+                                ₱ {price}
                             </Card.Text>
                             
                             <Form.Group className="mb-4">

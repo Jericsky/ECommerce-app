@@ -25,8 +25,8 @@ export default function EditProducts({ product, fetchData }) {
 
     const editProduct = (e, productId) => {
         e.preventDefault();
-
-        fetch(`http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/products/${productId}/update`, {
+ 
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${productId}/update`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

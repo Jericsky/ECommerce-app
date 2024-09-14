@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import UserContext from '../context/UserContext';
 import PreviewProducts from '../components/PreviewProducts';
 import AdminView from '../components/AdminView';
@@ -14,8 +15,8 @@ export default function CatalogPage() {
 
     const fetchData = async () => {
         const fetchUrl = user.isAdmin
-            ? 'http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/products/all'
-            : 'http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/products/active';
+            ? `${process.env.REACT_APP_API_BASE_URL}/products/all`
+            : `${process.env.REACT_APP_API_BASE_URL}/products/active`;
 
         try {
             const response = await fetch(fetchUrl, {
@@ -58,22 +59,49 @@ export default function CatalogPage() {
         setFilteredProducts(filtered);
     };
 
-    if (loading) return <LoadingIndicator/>;
+    if (loading) return <LoadingIndicator />;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <>
+        <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            transition={{ duration: 0.5 }}
+        >
             {user.isAdmin ? (
                 <AdminView productsData={products} fetchData={fetchData} />
             ) : (
                 <>
-                    <FilterProducts onFilter={handleFilter} />
-                    <h1 className="text-center mt-5 mb-4 display-4 font-weight-bold text-primary">
+                    <motion.div 
+                        initial={{ y: -20, opacity: 0 }} 
+                        animate={{ y: 0, opacity: 1 }} 
+                        exit={{ y: -20, opacity: 0 }} 
+                        transition={{ duration: 0.3 }}
+                    >
+                        <FilterProducts onFilter={handleFilter} />
+                    </motion.div>
+                    
+                    <motion.h1 
+                        className="text-center mt-5 mb-4 display-4 font-weight-bold text-primary"
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        exit={{ opacity: 0 }} 
+                        transition={{ duration: 0.3 }}
+                    >
                         Our Products
-                    </h1>
-                    <PreviewProducts productData={filteredProducts} />
+                    </motion.h1>
+                    
+                    <motion.div 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        exit={{ opacity: 0 }} 
+                        transition={{ duration: 0.5 }}
+                    >
+                        <PreviewProducts productData={filteredProducts} />
+                    </motion.div>
                 </>
             )}
-        </>
+        </motion.div>
     );
 }

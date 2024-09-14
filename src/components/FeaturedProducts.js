@@ -8,7 +8,8 @@ export default function FeaturedProducts() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/products/active');
+       
+                const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/active`);
                 const data = await response.json();
 
                 if (data.length === 0) {

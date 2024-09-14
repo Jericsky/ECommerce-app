@@ -9,7 +9,13 @@ import ProductView from './pages/ProductView';
 import Register from './pages/Register';
 import AppNavbar from './components/AppNavbar';
 import Logout from './pages/Logout';
+import Profile from './pages/Profile';
+import Cart from './pages/Cart';
+import Order from './pages/Order';
+import Orders from './components/Orders';
+import ResetPassword from './pages/ResetPassword';
 import Error from './components/Error';
+
 
 function App() {
 
@@ -27,7 +33,7 @@ function App() {
   }
 
   useEffect(() => {
-    fetch('http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/users/details', {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/users/details`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
@@ -64,9 +70,14 @@ function App() {
           <Route path='/' element={<Home/>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/login' element={<Login />} />
+          <Route path='/profile' element={<Profile/>}/>
           <Route path='/products' element={<CatalogPage/>}/>
           <Route path='/product/:productId' element={<ProductView/>}/>
+          <Route path='/cart' element={<Cart/>}/>
+          <Route path='/order' element={<Order/>}/>
+          <Route path='/all-orders' element={<Orders/>}/>
           <Route path="/logout" element={<Logout />}/>
+          <Route path='/reset-password' element={<ResetPassword />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </Router>

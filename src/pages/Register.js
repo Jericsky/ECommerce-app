@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Form, FloatingLabel, Button, Container, Row, Col } from 'react-bootstrap';
-import { useState, useContext, useEffect } from 'react';
-import UserContext from '../context/UserContext';
+import { Link } from 'react-router-dom';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import { Link } from 'react-router-dom'; 
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icons
+import UserContext from '../context/UserContext';
 
 export default function Register() {
     const notyf = new Notyf();
@@ -16,6 +16,8 @@ export default function Register() {
     const [mobileNo, setMobileNo] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // Password visibility toggle for password
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Password visibility toggle for confirm password
     const [buttonVariant, setButtonVariant] = useState("primary");
     const [buttonText, setButtonText] = useState("Register");
 
@@ -26,7 +28,7 @@ export default function Register() {
     function registerUser(e) {
         e.preventDefault();
 
-        fetch('http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/users/register', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/register`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -41,8 +43,6 @@ export default function Register() {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
-
             if (data.message === "Registered successfully") {
                 setFirstName('');
                 setLastName('');
@@ -52,7 +52,8 @@ export default function Register() {
                 setConfirmPassword('');
 
                 notyf.success("Registration successful");
-                console.log(data.message);
+            } else if (data.error) {
+                notyf.error(data.error);
             } else {
                 notyf.error("Something went wrong.");
             }
@@ -120,26 +121,42 @@ export default function Register() {
                                 />
                             </FloatingLabel>
 
-                            <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3 text-muted">
+                            <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3 text-muted position-relative">
                                 <Form.Control
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'} // Toggle input type
                                     name="password"
                                     placeholder="Password"
                                     required
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
                                 />
+                                <Button
+                                    variant="link"
+                                    className="position-absolute end-0 top-50 translate-middle-y"
+                                    style={{ padding: '0', marginRight: '10px' }}
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+                                </Button>
                             </FloatingLabel>
 
-                            <FloatingLabel controlId="floatingVerifyPassword" label="Verify Password" className="mb-3 text-muted">
+                            <FloatingLabel controlId="floatingVerifyPassword" label="Verify Password" className="mb-3 text-muted position-relative">
                                 <Form.Control
-                                    type="password"
+                                    type={showConfirmPassword ? 'text' : 'password'} // Toggle input type
                                     name="verifyPassword"
                                     placeholder="Verify Password"
                                     required
                                     value={confirmPassword}
                                     onChange={e => setConfirmPassword(e.target.value)}
                                 />
+                                <Button
+                                    variant="link"
+                                    className="position-absolute end-0 top-50 translate-middle-y"
+                                    style={{ padding: '0', marginRight: '10px' }}
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                >
+                                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+                                </Button>
                             </FloatingLabel>
 
                             <Button variant={buttonVariant} type="submit" className="w-100 mt-3" size="lg">
@@ -152,7 +169,7 @@ export default function Register() {
                         </Form>
                     </Col>
                 </Row>
-            </Container >
+            </Container>
         </>
     );
 }

@@ -1,17 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { Container, Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
-import UserContext from '../context/UserContext';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icons
+import UserContext from '../context/UserContext';
 
 export default function Login() {
     const notyf = new Notyf();
     const { user, setUser } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const navigate = useNavigate();
-    
+
     if (user.id) {
         return <Navigate to="/" />;
     }
@@ -19,7 +21,7 @@ export default function Login() {
     function authenticate(e) {
         e.preventDefault();
 
-        fetch('http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/users/login', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +52,7 @@ export default function Login() {
     }
 
     function retrieveUserDetails(token) {
-        fetch('http://ec2-3-145-9-198.us-east-2.compute.amazonaws.com/b1/users/details', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/details`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -80,14 +82,22 @@ export default function Login() {
                             />
                         </FloatingLabel>
 
-                        <FloatingLabel controlId="floatingPassword" label="Password" className="text-muted">
+                        <FloatingLabel controlId="floatingPassword" label="Password" className="text-muted position-relative">
                             <Form.Control
-                                type="password"
+                                type={showPassword ? 'text' : 'password'} // Toggle input type based on state
                                 placeholder="Password"
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            <Button
+                                variant="link"
+                                className="position-absolute end-0 top-50 translate-middle-y"
+                                style={{ padding: '0', marginRight: '10px' }}
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+                            </Button>
                         </FloatingLabel>
 
                         <Button variant="primary" type="submit" className="w-100 mt-3" size="lg">
